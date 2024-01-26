@@ -1,18 +1,22 @@
 package data;
 
-import com.example.mprprojectmvn.data.Student;
-import com.example.mprprojectmvn.data.StudentRepository;
-import com.example.mprprojectmvn.data.StudentUnit;
+import com.example.mprprojectmvn.student.data.Student;
+import com.example.mprprojectmvn.student.data.StudentRepository;
+import com.example.mprprojectmvn.student.data.StudentUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataJpaTest
+@Deprecated
+@SpringBootConfiguration
 class StudentRepositoryJpaTest {
+
     @Autowired
     private StudentRepository studentRepository;
 

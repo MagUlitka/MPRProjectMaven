@@ -1,4 +1,4 @@
-package com.example.mprprojectmvn.data;
+package com.example.mprprojectmvn.student.data;
 
 public enum StudentUnit {
     GDANSK,

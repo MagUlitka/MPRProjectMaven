@@ -1,8 +1,7 @@
-package com.example.mprprojectmvn.resource;
+package com.example.mprprojectmvn.student.resource;
 
-import com.example.mprprojectmvn.data.Student;
-import com.example.mprprojectmvn.data.StudyCourseType;
-import com.example.mprprojectmvn.service.StudentService;
+
+import com.example.mprprojectmvn.student.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -16,6 +15,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class StudentResource {
     private final StudentService studentService;
+
+    @GetMapping
+    public List<StudentDto> getAll(){
+       return studentService.getAll();
+    }
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void saveStudents(@Validated @RequestBody CreateStudent createStudent){
@@ -24,8 +28,8 @@ public class StudentResource {
 
     @PostMapping("/update/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Student updateStudentById(@Validated @RequestBody StudentDto studentDto, @PathVariable UUID id){
-        return studentService.updateStudentById(studentDto);
+    public StudentDto updateStudentById(@Validated @RequestBody StudentDto studentDto, @PathVariable UUID id){
+        return studentService.updateStudentById(studentDto, id);
     }
     @GetMapping("/{id}")
     public StudentDto getStudentById(@PathVariable UUID id){
@@ -39,18 +43,18 @@ public class StudentResource {
         studentService.deleteByName(name);
     }
 
-    @GetMapping("/show/{name}")
-    public List<StudentDto> getStudentByName(@PathVariable String name){
-        return studentService.getStudentByName(name);
+    @GetMapping("/name/{name}")
+    public List<StudentDto> getStudentsByName(@PathVariable String name){
+        return studentService.getStudentsByName(name);
     }
 
-    @GetMapping("/surname")
-    public List<StudentDto> getStudentBySurname(@RequestParam String surname){
+    @GetMapping("/surname/{surname}")
+    public List<StudentDto> getStudentBySurname(@PathVariable String surname){
         return studentService.getStudentsBySurname(surname);
     }
 
-    @GetMapping("/studyCourseType")
-    public List<StudentDto> getStudentByStudyCourseType(@RequestParam StudyCourseType studyCourseType){
-        return studentService.getStudentsByStudyCourseType(studyCourseType);
+    @GetMapping("/courseName/{courseName}")
+    public List<StudentDto> getStudentByCourseName(@PathVariable String courseName){
+        return studentService.getStudentsByCourseName(courseName);
     }
 }

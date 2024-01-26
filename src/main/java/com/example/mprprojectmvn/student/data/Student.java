@@ -1,5 +1,6 @@
-package com.example.mprprojectmvn.data;
+package com.example.mprprojectmvn.student.data;
 
+import com.example.mprprojectmvn.course.data.Course;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,18 +22,18 @@ public class Student {
         this.unit = unit;
     }
 
-    public Student(String name, String surname, StudyCourseType studyCourseType, StudentUnit unit, Long index) {
+    public Student(String name, String surname, Course course, StudentUnit unit, Long index) {
         this.name = name;
         this.surname = surname;
-        this.studyCourseType = studyCourseType;
+        this.course = course;
         this.unit = unit;
         this.index = index;
     }
 
-    public Student(String name, String surname, StudyCourseType studyCourseType, StudentUnit unit) {
+    public Student(String name, String surname, Course course, StudentUnit unit) {
         this.name = name;
         this.surname = surname;
-        this.studyCourseType = studyCourseType;
+        this.course = course;
         this.unit = unit;
     }
 
@@ -43,9 +44,10 @@ public class Student {
     private String name;
     @Setter
     private String surname;
+    @ManyToOne
+    @JoinColumn(name = "course_id", nullable = false)
     @Setter
-    @Enumerated(EnumType.STRING)
-    private StudyCourseType studyCourseType;
+    private Course course;
     @Setter
     @Enumerated(EnumType.STRING)
     private StudentUnit unit;

@@ -7,7 +7,7 @@ spring:
     password: student
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     show-sql: true
 server:
   port: 8080

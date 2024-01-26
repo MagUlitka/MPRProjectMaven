@@ -1,37 +1,45 @@
 package com.example.mprprojectmvn;
 
-import com.example.mprprojectmvn.data.Student;
-import com.example.mprprojectmvn.data.StudentRepository;
-import com.example.mprprojectmvn.data.StudentUnit;
-import com.example.mprprojectmvn.data.StudyCourseType;
-import com.example.mprprojectmvn.resource.CreateStudent;
-import io.restassured.RestAssured;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
+import com.example.mprprojectmvn.course.data.Course;
+import com.example.mprprojectmvn.course.data.CourseRepository;
+import com.example.mprprojectmvn.student.data.Student;
+import com.example.mprprojectmvn.student.data.StudentRepository;
+import com.example.mprprojectmvn.student.data.StudentUnit;
+import com.example.mprprojectmvn.student.resource.CreateStudent;
+import com.example.mprprojectmvn.student.service.StudentService;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.*;
+import java.util.ArrayList;
+import java.util.UUID;
+
+import static io.restassured.RestAssured.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.mockMvc;
-import static io.restassured.module.mockmvc.RestAssuredMockMvc.when;
-import static org.assertj.core.api.BDDAssertions.then;
 import static org.hamcrest.Matchers.equalTo;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class StudentResourceRestAssuredTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private StudentRepository repository;
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private CourseRepository courseRepository;
+    @LocalServerPort
+    private int port;
     @BeforeEach
     void setUp(){
         mockMvc(mockMvc);
@@ -43,30 +51,38 @@ public class StudentResourceRestAssuredTest {
     @Test
     void givenStudentInDbWhenGetByIdThenReturnStudentDto(){
         var student = repository.save(new Student("M", StudentUnit.GDANSK,15L));
+        given().
         when().get("/students/" + student.getId())
                 .then()
-                .status(HttpStatus.OK)
+                .statusCode(HttpStatus.OK.value())
                 .body("id", equalTo(student.getId().toString()))
                 .body("name",equalTo(student.getName()))
                 .body("unit",equalTo(student.getUnit().toString()))
                 .body("index",equalTo(student.getIndex().intValue()));
     }
 
+
     @Test
     void givenStudentDataWhenCreateStudentThenRespondIsCreated(){
-        given().contentType(MediaType.APPLICATION_JSON)
-                .body(new CreateStudent("Karola", "P", StudyCourseType.NEW_MEDIA_ART, StudentUnit.GDANSK))
+        var course1 = new Course(1,"course1",0,new ArrayList<>(),"Aaa");
+        courseRepository.save(course1);
+        given().contentType(String.valueOf(MediaType.APPLICATION_JSON))
+                .body(new CreateStudent("Karola", "P", "course1", StudentUnit.GDANSK))
+                .port(port)
                 .when()
                 .post("/students")
                 .then()
-                .status(HttpStatus.CREATED);
+                .statusCode(HttpStatus.CREATED.value());
     }
 
     @Test
     void givenStudentsInDbWhenGetByNameThenReturnList(){
-        var student = repository.save(new Student("M", StudentUnit.GDANSK,15L));
+        var course1 = new Course(1,"course1",0,new ArrayList<>(),"Aaa");
+        courseRepository.save(course1);
+        var student = repository.save(new Student("M", "C", course1, StudentUnit.GDANSK,15L));
         given()
                 .param("name","M")
+                .port(port)
                 .when().get("/students").then()
                 .body("$.size()",equalTo(1))
                 .body("[0].id",equalTo(student.getId().toString()))

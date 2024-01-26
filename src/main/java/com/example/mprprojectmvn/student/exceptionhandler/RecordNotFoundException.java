@@ -1,4 +1,4 @@
-package com.example.mprprojectmvn.exceptionhandler;
+package com.example.mprprojectmvn.student.exceptionhandler;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
