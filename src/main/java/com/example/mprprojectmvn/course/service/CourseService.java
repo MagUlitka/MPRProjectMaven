@@ -87,7 +87,11 @@ public class CourseService {
         Course toUpdate = courseRepository.findById(id).orElseThrow(() -> new RecordNotFoundException("There's no such course in the database"));
         toUpdate.setCourseName(courseDto.getCourseName());
         toUpdate.setTotalStudentsCount(courseDto.getTotalStudentsCount());
-        toUpdate.setAttendingStudents(courseDto.getAttendingStudents().stream().map(studentMapper::studentDtoToEntity).toList());
+        if(courseDto.getAttendingStudents().isEmpty()){
+            toUpdate.setAttendingStudents(new ArrayList<>());
+            toUpdate.setTotalStudentsCount(0);
+        }
+        else toUpdate.setAttendingStudents(courseDto.getAttendingStudents().stream().map(studentMapper::studentDtoToEntity).toList());
         toUpdate.setTeacherName(courseDto.getTeacherName());
         courseRepository.save(toUpdate);
         return courseDto;

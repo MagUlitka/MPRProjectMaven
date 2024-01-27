@@ -38,11 +38,6 @@ class StudentServiceTest {
     private CourseMapper courseMapper = mock(CourseMapper.class);
     private CourseService courseService =mock(CourseService.class);
     private StudentMapper studentMapper = mock(StudentMapper.class);
-//    @Autowired
-//    private CourseRepository courseRepository;
-
-  //  private StudentMapper studentMapper = new StudentMapper(courseRepository);
-
     private StudentService studentService = new StudentService(studentRepository, courseRepository, courseService,studentMapper,courseMapper);
 
     @BeforeEach
@@ -67,35 +62,6 @@ class StudentServiceTest {
     static void cleanUpAll(){
         log.info("After all tests this cleanup is called");
     }
-    @Test
-    void givenGdanskUnitWhenSaveStudentThenGetValidIndex(){
-        //given
- //       var student = new CreateStudent("Magdalena", "C",StudyCourseType.COMPUTER_SCIENCE,StudentUnit.GDANSK);
-//        maxIndex = 6L;
-//        when(studentRepository.getMaxIndex()).thenReturn(5L); // wywoła podaną metodę dla mocka "studentRepository" (bo sam mock nie zwraca nic gdy są wywoływane metody)
-
-
-//        //when
-//       var savedStudent = studentService.saveStudent(student);
-//
-//        //then
-//        assertEquals(student.getName(),savedStudent.getName());
-//        assertEquals(student.getUnit(),savedStudent.getUnit());
-//        verify(studentRepository,times(1)).saveStudent(any());
-    }
-
-//    @Test
-//    void givenWarszawaUnitWhenSaveStudentThenGetValidIndex(){
-//        //given
-//        var student = new CreateStudent("Magdalena", StudentUnit.WARSZAWA);
-//        //when
-//        var savedStudent = studentService.saveStudent(student);
-//
-//        //then
-//        assertEquals(student.name(),savedStudent.name());
-//        assertEquals(student.unit(),savedStudent.unit());
-//        verify(studentRepository,times(1)).saveStudent(any());
-//    }
 
     @Test
     void givenExistingSurnameWhenGetStudentsBySurnameThenReturnListWithStudents(){
@@ -145,23 +111,6 @@ class StudentServiceTest {
 
         assertEquals(predestinedMatches.stream().map(studentMapper::toDto).toList(),foundStudents);
     }
-//    @Test
-//    void givenExistingStudentIdAndUpdateDtoWhenUpdateStudentByIdThenUpdateAndReturnStudent() {
-//        Student existingStudent = new Student(UUID.randomUUID(), "M", "K", StudyCourseType.NEW_MEDIA_ART, StudentUnit.GDANSK, 0L);
-//        StudentDto updatedStudentDto = new StudentDto(existingStudent.getId(),"Magdalena","C", StudyCourseType.COMPUTER_SCIENCE,StudentUnit.GDANSK, 5L);
-//
-//        when(studentRepository.findById(eq(existingStudent.getId()))).thenReturn(Optional.of(existingStudent));
-//        studentMapper.studentDtoToEntity(updatedStudentDto);
-//        when(studentRepository.save(eq(existingStudent))).thenReturn(existingStudent);
-//
-//        studentService.updateStudentById(updatedStudentDto, existingStudent.getId());
-//
-//        assertEquals(existingStudent, updatedStudent);
-//        verify(studentRepository, times(1)).findById(eq(existingStudent.getId()));
-//        verify(studentRepository, times(1)).save(eq(existingStudent));
-//    }
-
-    //?
     @Test
     void givenNonExistingStudentIdWhenUpdateStudentByIdThenThrowRecordNotFoundException() {
         var course1 = new Course(1,"course1",0,new ArrayList<>(),"Aaa");

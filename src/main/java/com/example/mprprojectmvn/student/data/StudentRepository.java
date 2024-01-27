@@ -20,15 +20,14 @@ public interface StudentRepository extends JpaRepository<Student, UUID> {
 
     @Query("select max(s.index) from Student s")
     Optional<Long> getMaxIndex();
-
-@Query("select s from Student s")
+    @Query("select s from Student s")
     List<Student> getAll();
 
     @Query("select s from Student s where s.name = :name and s.unit = :unit")
     List<Student> getByNameAndUnit(@Param("name") String name, @Param("unit") StudentUnit unit);
     @Query("select s from Student s where s.surname = :surname")
     List<Student> getStudentsBySurname(@Param("surname") String surname);
-    @Query("select s from Student s where s.course = :courseName")
+    @Query("select s from Student s join s.course c where c.courseName = :courseName")
     List<Student> getStudentsByCourseName(@Param("courseName") String courseName);
     default  List<Student> getFromGdanskByName(String name) {
         return getByNameAndUnit(name,StudentUnit.GDANSK);

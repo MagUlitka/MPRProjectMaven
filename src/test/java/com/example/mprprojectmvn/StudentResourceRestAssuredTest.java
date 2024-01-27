@@ -35,8 +35,6 @@ public class StudentResourceRestAssuredTest {
     @Autowired
     private StudentRepository repository;
     @Autowired
-    private StudentService studentService;
-    @Autowired
     private CourseRepository courseRepository;
     @LocalServerPort
     private int port;
@@ -50,13 +48,18 @@ public class StudentResourceRestAssuredTest {
     }
     @Test
     void givenStudentInDbWhenGetByIdThenReturnStudentDto(){
-        var student = repository.save(new Student("M", StudentUnit.GDANSK,15L));
+        var course1 = new Course(1,"course1",0,new ArrayList<>(),"Aaa");
+        courseRepository.save(course1);
+        var student = repository.save(new Student("M", "C",course1, StudentUnit.GDANSK,15L));
         given().
+                port(port).
         when().get("/students/" + student.getId())
                 .then()
                 .statusCode(HttpStatus.OK.value())
                 .body("id", equalTo(student.getId().toString()))
                 .body("name",equalTo(student.getName()))
+                .body("surname",equalTo(student.getSurname()))
+                .body("courseName",equalTo(student.getCourse().getCourseName()))
                 .body("unit",equalTo(student.getUnit().toString()))
                 .body("index",equalTo(student.getIndex().intValue()));
     }
